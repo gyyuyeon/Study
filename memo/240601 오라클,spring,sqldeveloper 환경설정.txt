@@ -1,0 +1,30 @@
+24/06/01 오라클,spring,sqldeveloper 환경설정
+
+
+Spring Boot: 2.5.0
+Spring Dependency Management: 1.0.10.RELEASE
+Java: 11
+Oracle: 11g
+Oracle JDBC: ojdbc8 19.8.0.0
+HikariCP: 
+Tomcat Embed Jasper: 
+JSTL: 
+Lombok: 
+
+
+
+의존성 목록
+org.springframework.boot:spring-boot-starter-jdbc
+org.springframework.boot:spring-boot-starter-web
+org.springframework.boot:spring-boot-starter-data-jpa
+org.projectlombok:lombok
+com.oracle.database.jdbc:ojdbc8:19.8.0.0
+com.zaxxer:HikariCP
+org.springframework.boot:spring-boot-starter-tomcat
+org.springframework.boot:spring-boot-starter-test
+javax.servlet:jstl
+org.apache.tomcat.embed:tomcat-embed-jasper
+
+
+
+

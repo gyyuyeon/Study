@@ -1,0 +1,21 @@
+JPA
+
+findByName(String name): 이름이 일치하는 모든 엔티티를 조회합니다.
+findByEmail(String email): 이메일이 일치하는 모든 엔티티를 조회합니다.
+findByNameAndEmail(String name, String email): 이름과 이메일이 모두 일치하는 모든 엔티티를 조회합니다.
+findByNameOrEmail(String name, String email): 이름 또는 이메일이 일치하는 모든 엔티티를 조회합니다.
+findByNameContaining(String name): 이름에 특정 문자열이 포함된 모든 엔티티를 조회합니다.
+findByNameStartingWith(String prefix): 이름이 특정 접두사로 시작하는 모든 엔티티를 조회합니다.
+findByNameEndingWith(String suffix): 이름이 특정 접미사로 끝나는 모든 엔티티를 조회합니다.
+
+
+Oracle
+
+오라클 다운받고 system 또는 sys as sysdba로 우선 시스템계정 만든후(XE임)
+SELECT * FROM all_users; 확인
+CREATE USER STUDENT IDENTIFIED BY 1234; 하나만들고
+GRANT CONNECT, RESOURCE TO STUDENT; 권한주기
+
+다하고 커밋도 해야함
+
+oracle 11g 버전은 auto increment 를 지원해주지 않으므로 따로 트리거를 이용해서 만들어 줘야하는거 같다
