@@ -45,5 +45,9 @@ public class periodicTable {
 	@Comment("발견자")
 	private String periodicFp;
 	
+	@Column(name="Date")
+	@Comment("날자")
+	private String date;
+	
 
 }

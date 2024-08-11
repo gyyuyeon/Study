@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>AJAX 요청</title>
+    <!-- jQuery 라이브러리 로드 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <button id="saveButton" style="width: 100px; height: 30px;">save</button>
+
+    <script>
+        $(document).ready(function() {
+            $('#saveButton').on('click', function() {
+                $.ajax({
+                    url: '/periodic/save',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        // 여기에서 보낼 데이터를 설정하세요
+                        key1: 'value1',
+                        key2: 'value2',
+                        key3: 'value3'
+                    }),
+                    success: function(response) {
+                        console.log('성공:', response);
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('오류:', error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

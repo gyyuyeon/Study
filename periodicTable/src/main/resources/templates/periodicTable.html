@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Periodic Table</title>
+    <!-- jQuery 라이브러리 로드 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables 라이브러리 로드 -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+    <!-- select2 라이브러리 로드 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    
+    <style>
+		
+		/* select2 스타일링 */
+		.select2-container--default .select2-selection--single {
+	
+		    height: 30px; /* 높이를 30px로 조정 */
+		    border: 1px solid #ccc; /* 테두리 색상 */
+		    border-radius: 4px; /* 모서리 둥글기 */
+		    font-size: 14px;
+		    display: flex; /* Flexbox를 사용하여 텍스트와 화살표 아이콘을 정렬 */
+		    align-items: center; /* 세로 가운데 정렬 */
+		    padding: 0 10px; /* 텍스트와 테두리 사이의 간격 */
+		    box-sizing: border-box; /* 패딩을 포함한 전체 박스 크기를 계산 */
+		}
+		
+		.select2-container--default .select2-selection--single .select2-selection__rendered {
+		    line-height: normal; /* line-height를 기본값으로 설정 */
+		    padding-left: 0; /* 왼쪽 패딩 초기화 */
+		    margin: 0; /* margin 초기화 */
+		    flex-grow: 1; /* Flexbox에서 남은 공간을 차지하게 설정 */
+		}
+		
+		.select2-container--default .select2-selection--single .select2-selection__arrow {
+		    height: 100%; /* 화살표 아이콘을 컨테이너 높이에 맞추기 */
+		    display: flex; /* Flexbox 사용 */
+		    align-items: center; /* 세로 가운데 정렬 */
+		}
+
+	</style>
+</head>
+<body>
+    <h1>Periodic Table</h1>
+    <div style="display: flex;">
+        <!-- 원소명을 입력할 검색 필드 -->
+        <div style="padding-bottom: 20px; padding-right: 30px;">
+            <label>input box 필터</label>
+            <input type="text" id="elementSearch" name="elementSearch">
+        </div>
+        <div style="padding-bottom: 20px; padding-right: 30px;">
+            <label for="stateFilter">기본 select 필터:</label>
+            <select id="stateFilter" name="stateFilter">
+                <option value="">전체</option>
+                <th:block th:each="state : ${periodicSt}">
+                    <option th:value="${state}" th:text="${state}"></option>
+                </th:block>
+            </select>
+        </div>
+        <div>
+            <label for="filter">select2 필터:</label>
+            <select id="filter" name="filter" >
+                <option value="">전체</option>
+                <th:block th:each="state : ${periodicSt}">
+                    <option th:value="${state}" th:text="${state}"></option>
+                </th:block>
+            </select>
+        </div>
+    </div>
+
+    <table id="periodicTable" class="display">
+        <thead>
+            <tr>
+                <th>원소번호</th>
+                <th>원소기호</th>
+                <th>원소명</th>
+                <th>원자질량</th>
+                <th>상태</th>
+                <th>발견년도</th>
+                <th>발견자</th>
+                <th>날자</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script>
+        $(document).ready(function() {
+            // DataTable 초기화
+            var table = $('#periodicTable').DataTable({
+                "ajax": {
+                    "url": "/info",
+                    "type": "GET",
+                    "dataSrc": ""
+                },
+                "columns": [
+                    { "data": "periodicId" },
+                    { "data": "periodicSi" },
+                    { "data": "periodicNm" },
+                    { "data": "periodicMass" },
+                    { "data": "periodicSt" },
+                    { "data": "periodicFy" },
+                    { "data": "periodicFp" },
+                    { "data": "date" }
+                ]
+            });
+
+            // 원소명 검색 필드의 변경 감지하여 필터링 적용
+            $('#elementSearch').on('keyup change', function() {
+                table.column(2).search(this.value).draw(); // 3번째 컬럼(원소명)에 대해 필터링
+            });
+
+            // 상태 필터의 변경 감지하여 필터링 적용
+            $('#stateFilter').on('change', function() {
+                table.column(4).search(this.value).draw(); // 5번째 컬럼(상태)에 대해 필터링
+            });
+
+           // select2 필터 초기화
+			$('#filter').select2({
+			    placeholder: '전체',
+			    allowClear: true,
+			    language: {
+			        noResults: function() {
+			            return "";
+			        }
+			    },
+			    //minimumResultsForSearch: Infinity // 검색 입력 필드를 숨기기 위해 설정 (옵션이 많지 않을 때 유용)
+			}).on('change', function() {
+			    table.column(4).search(this.value).draw(); // 5번째 컬럼(상태)에 대해 필터링
+			});
+			
+			// select2 검색 결과 및 기본 표시 결과 3개로 제한
+			$('#filter').on('select2:open', function() {
+			    setTimeout(function() {
+			        const results = document.querySelectorAll('.select2-results__option');
+			        results.forEach((result, index) => {
+			            if (index >= 3) {
+			                result.style.display = 'none';
+			            }
+			        });
+			    }, 0);
+			});
+        });
+    </script>
+</body>
+</html>
